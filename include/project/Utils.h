@@ -176,4 +176,19 @@ namespace Utils {
             void executeRequest();
         };
     };
+
+
+    /**
+     * Utility namespace to interact with files.
+     */
+    namespace File {
+
+        /**
+         * Reads the content of a file.
+         * 
+         * @param file_path The path to the file that has to be read.
+         * @return A vector that contains every line in the file.
+         */
+        std::vector<std::string> readFileContent(const std::string& file_path);
+    };
 };

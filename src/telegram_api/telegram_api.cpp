@@ -6,6 +6,9 @@
 #include "../include/project/Utils.h"
 
 
+/**
+ * Constructs a TelegramBot object with the provided bot token.
+ */
 TelegramBot::TelegramBot(std::string bot_token) {
 
     Utils::Log::log(Utils::Log::LogLevel::LOG_LEVEL_SYSTEM, 
@@ -16,25 +19,25 @@ TelegramBot::TelegramBot(std::string bot_token) {
 }
 
 
+/**
+ * Constructs a TelegramBot object with the default bot token.
+ */
 TelegramBot::TelegramBot() {
 
     Utils::Log::log(Utils::Log::LogLevel::LOG_LEVEL_SYSTEM, 
                     "Starting the bot with the stored token");
 
-    std::ifstream inputFile("../resources/telegram_bot_token.txt"); 
+    // Reads the content of the file
+    std::vector<std::string> bot_token_file_content = 
+            Utils::File::readFileContent(TELEGRAM_BOT_TOKEN_FILEPATH);
     
-    if (!inputFile.is_open()) {
+    // If it has some content
+    if (bot_token_file_content.size() > 0) {
 
-        Utils::Log::log(Utils::Log::LogLevel::LOG_LEVEL_ERROR, 
-                        "Token file not found!");
-    }
-    else {
+        // The first line contains the token
+        std::string bot_token = bot_token_file_content[0];
 
-        std::string bot_token;
-        getline(inputFile, bot_token); 
-        
-        inputFile.close();
-        
+        // Debug print showing the token
         Utils::Log::log(Utils::Log::LogLevel::LOG_LEVEL_DEBUG, 
                         "Token file contains: " + bot_token);
 
@@ -45,7 +48,7 @@ TelegramBot::TelegramBot() {
 
 
 /**
- * Send a text message to a specified chat.
+ * Sends a text message to a specified chat.
  */
 TelegramBotResult TelegramBot::sendTextMessage(const std::string& chat_id,
                                                const std::string& message) {
@@ -56,12 +59,16 @@ TelegramBotResult TelegramBot::sendTextMessage(const std::string& chat_id,
     // Api url to send the text_message
     const std::string url = bot_url + "/sendMessage";
 
-    
+    // Creates a request
     Utils::HttpRequests::RequestExecutor request_executor(url);
 
+    // Adds the chat id where it has to be sent
     request_executor.addTextContent("chat_id", chat_id);
+
+    // Adds the content of the message it has to send
     request_executor.addTextContent("text", message);
 
+    // Executres the request
     request_executor.executeRequest();
     
     return execution_result;

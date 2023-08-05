@@ -2,6 +2,9 @@
 
 #include <string>
 
+
+#define TELEGRAM_BOT_TOKEN_FILEPATH "../resources/telegram_bot_token.txt"
+
 /**
  * Enumeration representing the results of Telegram Bot actions.
  */
