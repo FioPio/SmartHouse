@@ -1,9 +1,12 @@
 #pragma once
 
 #include <string>
-
+#include <vector>
 
 #define TELEGRAM_BOT_TOKEN_FILEPATH "../resources/telegram_bot_token.txt"
+
+#define TELEGRAM_SEND_MESSAGE_METHOD "/sendMessage"
+#define TELEGRAM_GET_CHATS_UPDATES_METHOD "/getUpdates"
 
 /**
  * Enumeration representing the results of Telegram Bot actions.
@@ -13,12 +16,27 @@ enum class TelegramBotResult {
     RESULT_SENDING_ERROR   /**< An error occurred while sending the message. */
 };
 
+
+/**
+ * A struct holing all the relevant data from a chat message.
+ */
+struct ChatMessage {
+
+    int chat_id;
+    long timestamp;
+    std::string message;
+    long update_id;
+};
+
+
 /**
  * A class representing a Telegram Bot for sending messages.
  */
 class TelegramBot {
 
     std::string bot_url; /**< The URL for interacting with the Telegram Bot API. */
+
+    std::string last_updated_id = "";
 
 public:
 
@@ -46,6 +64,13 @@ public:
      */
     TelegramBotResult sendTextMessage(const std::string& chat_id,
                                       const std::string& message);
+
+    /**
+     * Reads updates in the chats.
+     * 
+     * @return The chat updates.
+     */
+    std::vector<ChatMessage> getChatsUpdates();
 
 
 };

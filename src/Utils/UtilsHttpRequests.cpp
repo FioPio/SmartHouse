@@ -106,10 +106,12 @@ size_t dummyWriteCallback(void *contents, size_t size, size_t nmemb, void *user_
 /**
  * Executes the request.
  */
-void Utils::HttpRequests::RequestExecutor::executeRequest() {
+std::string Utils::HttpRequests::RequestExecutor::executeRequest() {
 
     // Creates a CURL object to execute the request
     CURL* curl = curl_easy_init();
+
+    std::string response_data;
 
     // If created correctly
     if (curl) {
@@ -122,14 +124,16 @@ void Utils::HttpRequests::RequestExecutor::executeRequest() {
         curl_easy_setopt(curl, CURLOPT_URL, 
                          request_url.c_str());
 
-        curl_easy_setopt(curl, CURLOPT_HTTPPOST, post);
+        if (contents.size() > 0) {
+
+            curl_easy_setopt(curl, CURLOPT_HTTPPOST, post);
+        }
 
         // Set the dummy callback to save the response into the variable
         // instead of printing it
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, dummyWriteCallback);
 
         // Get a string with the result of the request
-        std::string response_data;
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_data);
 
         CURLcode res = curl_easy_perform(curl);
@@ -139,9 +143,16 @@ void Utils::HttpRequests::RequestExecutor::executeRequest() {
             Utils::Log::log(Utils::Log::LogLevel::LOG_LEVEL_ERROR,
             curl_easy_strerror(res));
         }
+        else {
 
+            //Utils::Log::log(Utils::Log::LogLevel::LOG_LEVEL_DEBUG, response_data);
+        }
+
+        // Cleans the used resources
         curl_formfree(post);
         curl_easy_cleanup(curl);
     }
+
+    return response_data;
 }
 

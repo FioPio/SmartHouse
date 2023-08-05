@@ -172,8 +172,10 @@ namespace Utils {
 
             /**
              * Executes the request.
+             * 
+             * @return A string with the content of the response in JSON format.
              */
-            void executeRequest();
+            std::string executeRequest();
         };
     };
 
@@ -190,5 +192,35 @@ namespace Utils {
          * @return A vector that contains every line in the file.
          */
         std::vector<std::string> readFileContent(const std::string& file_path);
+    };
+
+    
+    /**
+     * Utility namespace to manipulate strings.
+     */
+    namespace String {
+
+        /**
+         * Splits a string into smaller strings using the provided delimiter.
+         * 
+         * @param input_string The string that will be split.
+         * @param delimiter The string that will be used as delimiter.
+         * @return A vector that contains all the sub strings.
+         */
+        std::vector<std::string> splitString(const std::string& input_string, 
+                                             const std::string& delimiter);
+
+
+        /**
+         * Replaces the indicated substrings for others in a string.
+         * 
+         * @param input_string The string that contains all the text.
+         * @param search_substring The string that will be replaced.
+         * @param replace_substring The string that will be added.
+         * @return A string with the modifications.
+         */
+        std::string replaceString(const std::string& input_string, 
+                                  const std::string& search_substring, 
+                                  const std::string& replace_substring);
     };
 };
